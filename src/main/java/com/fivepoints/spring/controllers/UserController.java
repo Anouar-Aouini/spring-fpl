@@ -49,6 +49,7 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+
     @PutMapping("/{id}")
     public ResponseEntity<MessageResponseUser> updateUserByID(
             @PathVariable("id") long id,
@@ -81,22 +82,16 @@ public class UserController {
         return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
     }
 
-//    @PutMapping("/approve-subscribe/{idUser}")
-//    public ResponseEntity<MessageResponse> approveSubscribe(long idUser) {
-//        String message = this.userService.affectUserToRole(idUser);
-//        return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
-//    }
-
-    // Affecter Post to user
-    @PutMapping("/affect-post/{idUser}/{idPost}")
-    public ResponseEntity<MessageResponse> affectUserToPost(long idUser, long idPost) {
-        String message = this.userService.affectUserToPost(idUser, idPost);
+    @PutMapping("/approve/{idUser}")
+    public ResponseEntity<MessageResponse> approveSubscribe(@PathVariable("idUser")  long idUser) {
+        String message = this.userService.approveSubscribe(idUser);
         return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
     }
+
     @GetMapping("/search/{name}")
     public ResponseEntity<List<User>>  filterUsers(@PathVariable() String name)
     {
-        List<User> listUsers = this.userService.filterByName(name);
+        List<User> listUsers = this.userRepository.filterByName(name);
         return new ResponseEntity<>(listUsers, HttpStatus.OK);
     }
 

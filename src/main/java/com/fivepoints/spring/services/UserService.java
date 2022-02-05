@@ -1,6 +1,7 @@
 package com.fivepoints.spring.services;
 
 import com.fivepoints.spring.entities.Book;
+import com.fivepoints.spring.entities.ERole;
 import com.fivepoints.spring.entities.Role;
 import com.fivepoints.spring.entities.User;
 import com.fivepoints.spring.exceptions.ResourceNotFoundException;
@@ -12,9 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -25,21 +24,15 @@ public class UserService {
     @Autowired
     RoleRepository roleRepository;
 
-
     @Autowired
     BookRepository bookRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
-//    public User saveNewUser(User user)
-//    {
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        return this.userRepository.save(user);
-//    }
-
     public List<User> getAllUsers()
     {
+
         return this.userRepository.findAll();
     }
 
@@ -71,10 +64,6 @@ public class UserService {
             throw new ResourceNotFoundException("User not found");
         }
     }
-    public List<User> filterByName(String name)
-    {
-        return this.userRepository.filterByName(name);
-    }
 
     public String deleteUserById(long id)
     {
@@ -85,6 +74,18 @@ public class UserService {
         } else {
             throw new ResourceNotFoundException("User not found");
         }
+    }
+
+
+    public String approveSubscribe(long idUser) {
+        Optional<User> userData = this.userRepository.findById(idUser);
+        if (userData.isPresent()) {
+            System.out.println(idUser);
+            User user = userData.orElse(null);
+            user.setSubscribed("true");
+            this.userRepository.save(user);
+        }
+        return "Subscription saved successfully!";
     }
 
     // Affecter Role to user
@@ -99,10 +100,14 @@ public class UserService {
                 roles.add(existingRole);
                 existingUser.setRoles(roles);
                 this.userRepository.save(existingUser);
+                return "User affected to role successfully!";
+            }else{
+                return "User affected to role successfully!";
             }
         }
         return "User affected to role successfully!";
     }
+
 
     public String affectUserToPost(long idUser,long idPost)
     {

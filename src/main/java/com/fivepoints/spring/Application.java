@@ -43,12 +43,14 @@ public class Application implements ApplicationRunner {
 		// Save roles
 		Role adminRole = this.roleRepository.save(new Role(ERole.ADMIN));
 		Role userRole = this.roleRepository.save(new Role(ERole.USER));
+		Role subscriberRole = this.roleRepository.save(new Role(ERole.SUBSCRIBER));
+
 
 
 
 		// Save users
 		User user1 = new User("Anouar", "Aouini",
-					"anouar@gmail.com",
+					"anouar@gmail.com","true",
 				this.passwordEncoder().encode("123456"));
 
 		// ManyToMany Relations

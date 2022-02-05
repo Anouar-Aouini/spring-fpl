@@ -34,6 +34,9 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
     @NonNull
+    @Column(name = "subscribed")
+    private String subscribed;
+    @NonNull
     @Column(name = "password")
     private String password;
     // OneToMany Relations

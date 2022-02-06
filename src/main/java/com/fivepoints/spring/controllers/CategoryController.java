@@ -23,9 +23,9 @@ public class CategoryController {
         return new ResponseEntity<>(categoryList, HttpStatus.OK);
     }
     @PostMapping("/")
-    public Category addTag(@RequestBody Category category)
+    public Category AddCategory(@RequestBody Category category)
     {
-        Category addCategory = (Category) this.categorytagService.addCategory(category);
+        Category addCategory = this.categorytagService.addCategory(category);
         return addCategory;
     }
     @GetMapping("/{id}")

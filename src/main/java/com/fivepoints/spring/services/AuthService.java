@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,31 +62,15 @@ public class AuthService {
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
         user.setEmail(registerRequest.getEmail());
+        user.setSubscribed("false");
+        user.setPermission("false");
+        user.setDownloadsNumber(0);
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
-        // Traitement des Roles
-        Set<String> registerRequestRoles = registerRequest.getRoles();
         Set<Role> roles = new HashSet<>();
-
-        // find Roles
-        if (registerRequestRoles == null) {
-            Role guestRole = this.roleRepository.findByName(ERole.USER)
-                    .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
-            roles.add(guestRole);
-        } else {
-            registerRequestRoles.forEach(role -> {
-                System.out.println(role);
-                switch (role) {
-                    case "user":
-                        System.out.println(this.roleRepository.findByName(ERole.USER));
-                        Role superAdminRole = this.roleRepository.findByName(ERole.USER)
-                                .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
-                        roles.add(superAdminRole);
-
-                        break;
-                }
-            });
-        }
+        Role guestRole = this.roleRepository.findByName(ERole.USER)
+                .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
+        roles.add(guestRole);
 
         // Affect User Roles
         user.setRoles(roles);

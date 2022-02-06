@@ -7,10 +7,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @Entity
@@ -37,8 +34,14 @@ public class User implements Serializable {
     @Column(name = "subscribed")
     private String subscribed;
     @NonNull
+    @Column(name = "permission")
+    private String permission;
+    @NonNull
     @Column(name = "password")
     private String password;
+    @NonNull
+    @Column(name = "downloads_number")
+    private int downloadsNumber;
     // OneToMany Relations
     @JsonIgnore
     @OneToMany(mappedBy="user")

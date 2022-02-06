@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 public class UserService {
@@ -76,6 +77,25 @@ public class UserService {
         }
     }
 
+    public String bookDownload(User user,long bookId) {
+        Optional<User> userData = this.userRepository.findById(user.getId());
+        Book book = this.bookRepository.findByIdTwo(bookId);
+        if (userData.isPresent()) {
+            User user1 = userData.orElse(null);
+            this.userRepository.save(user1);
+        }
+        return "Book downloaded successfully!";
+    }
+
+    public String demandSubscription(User user) {
+        Optional<User> userData = this.userRepository.findById(user.getId());
+        if (userData.isPresent()) {
+            User user1 = userData.orElse(null);
+            user.setPermission("true");
+            this.userRepository.save(user1);
+        }
+        return "Demand saved successfully!";
+    }
 
     public String approveSubscribe(long idUser) {
         Optional<User> userData = this.userRepository.findById(idUser);
@@ -106,26 +126,6 @@ public class UserService {
             }
         }
         return "User affected to role successfully!";
-    }
-
-
-    public String affectUserToPost(long idUser,long idPost)
-    {
-        Optional<User> userData = this.userRepository.findById(idUser);
-        if (userData.isPresent()) {
-            User existingUser = userData.orElseThrow(() -> new ResourceNotFoundException("User not found"));
-            Optional<Book> postData = this.bookRepository.findById(idPost);
-            if (postData.isPresent()) {
-                Book existingPost = postData.orElseThrow(() -> new ResourceNotFoundException("Post not found"));
-                existingPost.setUser(existingUser);
-                List<Book> posts = existingUser.getPosts();
-                posts.add(existingPost);
-                existingUser.setPosts(posts);
-                this.userRepository.save(existingUser);
-                this.bookRepository.save(existingPost);
-            }
-        }
-        return "User affected to post successfully!";
     }
 
     @Transactional(readOnly = true)

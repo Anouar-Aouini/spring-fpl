@@ -1,43 +1,30 @@
 package com.fivepoints.spring.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.Date;
 
 @Data
 @Entity
-@Table(name = "category")
+@Table(name = "downloads")
 @NoArgsConstructor
-@RequiredArgsConstructor
-@EqualsAndHashCode(exclude = {"createdAt", "updatedAt", "books"})
-public class Category implements Serializable {
-
+@EqualsAndHashCode(exclude = {"createdAt", "updatedAt"})
+public class Download implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Setter(value = AccessLevel.NONE)
     private long id;
 
     @NonNull
-    @Column(name = "categoryname")
-    private String categoryName;
-
+    @Column(name = "u_id")
+    private long u_id;
     @NonNull
-    @Lob
-    private String user_id;
-
-    // Relation
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "categories")
-    private List<Book> books = new ArrayList<>();
+    @Column(name = "b_id")
+    private long b_id;
 
     @Setter(value = AccessLevel.NONE)
     @Basic(optional = false)

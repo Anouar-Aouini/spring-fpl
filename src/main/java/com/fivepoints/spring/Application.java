@@ -11,10 +11,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SpringBootApplication
 @EnableSwagger2
@@ -43,22 +43,25 @@ public class Application implements ApplicationRunner {
 		// Save roles
 		Role adminRole = this.roleRepository.save(new Role(ERole.ADMIN));
 		Role userRole = this.roleRepository.save(new Role(ERole.USER));
-		Role subscriberRole = this.roleRepository.save(new Role(ERole.SUBSCRIBER));
-
-
-
 
 		// Save users
 		User user1 = new User("Anouar", "Aouini",
-					"anouar@gmail.com","true",
-				this.passwordEncoder().encode("123456"));
+					"anouar@gmail.com","true","",
+				this.passwordEncoder().encode("123456"),0);
 
 		// ManyToMany Relations
 		Set<Role> roles = new HashSet<>();
 		roles.add(adminRole);
 		user1.setRoles(roles);
-		this.userRepository.save(user1);
-
+		AtomicReference<Boolean> existedAdmin = new AtomicReference<>(false);
+		this.userRepository.findAll().forEach(user->{
+			if(user.getEmail().equals("anouar@gmail.com")){
+				existedAdmin.set(true);
+			}
+		});
+		if(!existedAdmin.get()){
+			this.userRepository.save(user1);
+		}
 
 	}
 }

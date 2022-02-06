@@ -16,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -74,4 +75,14 @@ public class BookController {
         List<Book> filtredPosts = this.bookService.findByTitleContaining(title);
         return new ResponseEntity<>(filtredPosts, HttpStatus.OK);
     }
+
+    @GetMapping("/mydownloadedbooks")
+    public ResponseEntity<ArrayList<Book>> getMyDownloadedBooks(
+            @CurrentSecurityContext(expression="authentication") Authentication authentication)
+    {
+        User user = this.userRepository.findByEmail(authentication.getName());
+        ArrayList<Book> myBookedEvents = this.bookService.getMyDownloadedBooks(user.getId());
+        return new ResponseEntity<>(myBookedEvents, HttpStatus.OK);
+    }
+
 }

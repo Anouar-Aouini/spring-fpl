@@ -88,6 +88,22 @@ public class UserController {
         return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
     }
 
+    @PutMapping("/demand-subscription")
+    public ResponseEntity<MessageResponse> demandSubscription(
+            @CurrentSecurityContext(expression="authentication") Authentication authentication) {
+        User user = this.userRepository.findByEmail(authentication.getName());
+        String message = this.userService.demandSubscription(user);
+        return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
+    }
+
+    @PutMapping("/download-book/{bookId}")
+    public ResponseEntity<MessageResponse> bookDownload(@PathVariable("bookId")  long bookId,
+            @CurrentSecurityContext(expression="authentication") Authentication authentication) {
+        User user = this.userRepository.findByEmail(authentication.getName());
+        String message = this.userService.bookDownload(user,bookId);
+        return new ResponseEntity<>(new MessageResponse(message), HttpStatus.OK);
+    }
+
     @GetMapping("/search/{name}")
     public ResponseEntity<List<User>>  filterUsers(@PathVariable() String name)
     {

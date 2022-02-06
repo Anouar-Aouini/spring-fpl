@@ -3,9 +3,11 @@ package com.fivepoints.spring.services;
 import com.fivepoints.spring.entities.Book;
 import com.fivepoints.spring.exceptions.ResourceNotFoundException;
 import com.fivepoints.spring.repositories.BookRepository;
+import com.fivepoints.spring.repositories.DownloadRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +16,8 @@ public class BookService {
 
     @Autowired
     BookRepository bookRepository;
+    @Autowired
+    DownloadRepository downloadRepository;
 
     public Book saveNewBook(Book post)
     {
@@ -53,5 +57,17 @@ public class BookService {
     public List<Book> findByTitleContaining(String title)
     {
         return  this.bookRepository.findByTitleContaining(title);
+    }
+
+    public ArrayList<Book> getMyDownloadedBooks(long id){
+        ArrayList<Book> myDownloadedBooks = new ArrayList<>();
+        this.downloadRepository.findDownloadByOwner(id).forEach(download -> {
+            this.bookRepository.findAll().forEach(book -> {
+                if(download.getB_id() == book.getId()){
+                    myDownloadedBooks.add(book);
+                }
+            });
+        });
+        return myDownloadedBooks;
     }
 }
